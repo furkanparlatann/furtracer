@@ -1,0 +1,13 @@
+[Unit]
+Description=FurTracer Service
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 /opt/furtracer/furtracer.py
+Restart=always
+User=root
+Group=root
+WorkingDirectory=/opt/furtracer
+
+[Install]
+WantedBy=multi-user.target

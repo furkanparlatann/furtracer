@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FurTracer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #b8b8b8;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0px;
+        }
+        .table-wrapper {
+            flex: 1 0 auto; /* Automatically adjust width */
+            max-width: 150px;
+        }
+        table {
+            width: auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 5px;
+            text-align: center;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .online {
+            background-color: #d4edda; /* Green */
+            color: #155724;
+        }
+        .offline {
+            background-color: #f8d7da; /* Red */
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Device Status</h1>
+    <div class="container" id="device-container"></div>
+
+    <script>
+        // Function to fetch updated device statuses and render them
+        async function updateDeviceStatus() {
+            try {
+                const response = await fetch('/api/status');
+                const data = await response.json();
+                const container = document.getElementById('device-container');
+                container.innerHTML = ''; // Clear the current content
+
+                const devices = data.statuses;
+                const chunkSize = 25; // 25 devices per table
+
+                // Split devices into chunks and render tables
+                for (let i = 0; i < devices.length; i += chunkSize) {
+                    const chunk = devices.slice(i, i + chunkSize);
+                    const tableWrapper = document.createElement('div');
+                    tableWrapper.className = 'table-wrapper';
+
+                    const table = document.createElement('table');
+                    const thead = `
+                        <thead>
+                            <tr>
+                                <th>IP Address</th>
+                            </tr>
+                        </thead>
+                    `;
+                    table.innerHTML = thead;
+
+                    const tbody = document.createElement('tbody');
+                    chunk.forEach(device => {
+                        const row = document.createElement('tr');
+                        row.className = device.status;
+                        row.innerHTML = `
+                            <td>${device.ip}</td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+
+                    table.appendChild(tbody);
+                    tableWrapper.appendChild(table);
+                    container.appendChild(tableWrapper);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        // Refresh the statuses every 0.2 seconds
+        setInterval(updateDeviceStatus, 200);
+
+        // Initial fetch on page load
+        updateDeviceStatus();
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
