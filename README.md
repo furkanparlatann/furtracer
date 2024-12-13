@@ -31,7 +31,7 @@
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/yourusername/furtracer.git
+   git clone https://github.com/furkanparlatann/furtracer.git
    cd furtracer
    ```
 
